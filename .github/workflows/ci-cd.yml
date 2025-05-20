@@ -1,0 +1,73 @@
+name: Roblox Luau CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install Foreman
+        uses: Roblox/setup-foreman@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Install Luau
+        run: |
+          foreman install luau-lsp
+          
+      - name: Run Luau Linting
+        run: |
+          luau-lsp analyze --sourcemap=sourcemap.json ./src
+
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install Foreman
+        uses: Roblox/setup-foreman@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Install Dependencies
+        run: |
+          foreman install rojo
+          foreman install run-in-roblox
+          
+      - name: Build with Rojo
+        run: rojo build -o build.rbxlx
+        
+      - name: Run Tests
+        run: run-in-roblox --place build.rbxlx --script tests/runner.server.lua
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install Foreman
+        uses: Roblox/setup-foreman@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Install Dependencies
+        run: |
+          foreman install rojo
+          
+      - name: Build with Rojo
+        run: rojo build -o game.rbxlx
+        
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: game-build
+          path: game.rbxlx

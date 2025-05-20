@@ -1,0 +1,90 @@
+{
+    // Roblox/Luau-spezifische Einstellungen
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    "files.associations": {
+        "*.lua": "lua",
+        "*.luau": "luau",
+        "*.json": "jsonc"
+    },
+    "json.schemas": [
+        {
+            "fileMatch": [
+                "rojo.json"
+            ],
+            "url": "https://raw.githubusercontent.com/rojo-rbx/rojo/master/schemas/project.json"
+        }
+    ],
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "lua.format.enable": true,
+    "lua.runtime.version": "Luau",
+    "lua.workspace.library": [
+        "${env:HOME}/Documents/Roblox/RobloxStudioPlugins/lsp/studio-plugin",
+        "${env:LOCALAPPDATA}/Roblox/Versions/version-*/ExtraContent/LuaPackages"
+    ],
+    // Deaktiviert alle nicht-relevanten Features
+    "editor.codeActionsOnSave": {},
+    "eslint.enable": false,
+    "typescript.validate.enable": false,
+    "javascript.validate.enable": false,
+    "github.copilot.enable": {
+        "*": false,
+        "lua": true,
+        "luau": true
+    },
+    // -- GitHub Copilot: optimized for Roblox/Luau development ------------------
+    "github.copilot.suggestionDelay": 0,
+    "github.copilot.enablePrerelease": true, // always use latest features
+    "editor.inlineSuggest.enabled": true, // VS Code inline engine
+    "github.copilot.advanced": {
+        "inlineSuggestCount": 5, // show up to 5 suggestions
+        "listCount": 10, // more suggestions in panel view
+        "temperature": 0.7 // focused suggestions for game logic
+    },
+    "github.copilot.chat.features.answersWithReferences": true, // helps with Roblox API
+    "editor.acceptSuggestionOnEnter": "smart", // better coding workflow
+    "files.watcherExclude": {
+        "**/node_modules/**": true,
+        "**/.git/**": true,
+        "**/build/**": true, // Rojo-Build-Ordner, falls vorhanden
+        "**/.roblox/**": true // ggf. lokaler Cache
+    },
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/build": true,
+        "**/.roblox": true
+    },
+    // Empfohlene Erweiterungen werden in extensions.json konfiguriert
+    // Luau-spezifische Editor-Einstellungen
+    "luau-lsp.completion.enabled": true,
+    "luau-lsp.diagnostics.workspace": true,
+    "luau-lsp.diagnostics.strictDatamodelTypes": true,
+    "luau-lsp.types.roblox": true,
+    "workbench.tree.indent": 10,
+    "workbench.statusBar.visible": true,
+    "editor.semanticHighlighting.enabled": false, // spart etwas CPU
+    // Luau LSP Sourcemap-Generierung
+    "luau-lsp.sourcemap.enabled": true,
+    "luau-lsp.sourcemap.autogenerate": true,
+    "luau-lsp.sourcemap.rojoProjectFile": "rojo.json",
+    "luau-lsp.sourcemap.includeNonScripts": true,
+    "luau-lsp.sourcemap.sourcemapFile": "sourcemap.json",
+    // Rojo-spezifische Einstellungen
+    "rojo.showRojoExplorerInSidebar": true,
+    "rojo.pluginManagement": true,
+    "rojo.syncThrottleValue": 500,
+    // Leistungsoptimierungen
+    "editor.quickSuggestions": {
+        "other": true,
+        "comments": false,
+        "strings": true
+    },
+    "editor.suggestSelection": "first",
+    "editor.fontLigatures": true,
+    "editor.bracketPairColorization.enabled": true
+}
