@@ -63,16 +63,89 @@ local function activateGuardianForPlayer(player)
                 
             elseif cmd == "/sandhelp" then
                 print("🏜️ GAARA'S SAND COMMANDS für " .. player.Name .. ":")
-                print("  /shukaku     - Aktiviere Shukaku-Modus (30s)")
-                print("  /defense     - Ultimate Defense")
+                print("  /shukaku         - Aktiviere Shukaku-Modus (30s)")
+                print("  /defense         - Ultimate Defense")
                 print("  /protect passive/active/aggressive")
-                print("  /sandstats   - Sand-System Status")
+                print("  /sandstats       - Sand-System Status")
+                print("  🏃‍♂️ PATH SYSTEM:")
+                print("  /rainbow         - Rainbow Path (30s)")
+                print("  /freshground     - Sofortiger frischer Boden")
+                print("  /pathsettings    - Pfad-Einstellungen ändern")
+                print("  🎨 PATTERN SYSTEM (100 Patterns!):")
+                print("  /pattern 1-100   - Pattern nach ID aktivieren")
+                print("  /pattern name    - Pattern nach Name suchen")
+                print("  /patterns        - Alle 100 Patterns auflisten")
+                print("  /category nature/magic/music/gaming/art")
+                print("  /randompattern   - Zufälliges Pattern")
+                print("  /stoppattern     - Aktuelles Pattern stoppen")
                 
             elseif cmd == "/sandstats" then
                 print("📊 SAND GUARDIAN STATUS für " .. player.Name .. ":")
                 print("  🏜️ Sand-Partikel: " .. #guardian.allParts)
                 print("  🛡️ Auto-Protection: " .. tostring(guardian.autoProtection))
                 print("  ⚡ Active Defenses: " .. #guardian.activeDefenses)
+                print("  🏃‍♂️ Active Path Parts: " .. #guardian.pathSystem.activePathParts)
+                print("  💎 Path Blessings: " .. tostring(guardian.pathSystem.pathBlessings))
+                
+            elseif cmd == "/rainbow" or cmd == "/rainbowpath" then
+                guardian:ActivateRainbowPath(30)
+                print("🌈 " .. player.Name .. " aktivierte Rainbow Path!")
+                
+            elseif cmd:match("/pathsettings") then
+                -- /pathsettings radius 10 blessings true
+                guardian:SetPathSettings({
+                    pathRadius = 10,
+                    pathBlessings = true
+                })
+                print("🎨 " .. player.Name .. " changed path settings!")
+                
+            elseif cmd == "/freshground" then
+                -- Sofortiger frischer Boden um Spieler
+                if character then
+                    guardian:BlessCurrentGround(character.HumanoidRootPart.Position)
+                    for angle = 0, math.pi * 2, 0.5 do
+                        local pos = character.HumanoidRootPart.Position + Vector3.new(
+                            math.cos(angle) * 8,
+                            0,
+                            math.sin(angle) * 8
+                        )
+                        guardian:PrepareFreshGround(pos, 1)
+                    end
+                    print("✨ " .. player.Name .. " created fresh ground circle!")
+                end
+                
+            elseif cmd:match("/pattern (%d+)") then
+                local patternId = tonumber(cmd:match("/pattern (%d+)"))
+                if guardian.patternSelector:ActivatePattern(patternId) then
+                    print("🎨 " .. player.Name .. " aktivierte Pattern ID: " .. patternId)
+                end
+                
+            elseif cmd:match("/pattern (.+)") then
+                local searchTerm = cmd:match("/pattern (.+)")
+                if guardian.patternSelector:SearchAndActivate(searchTerm) then
+                    print("🔍 " .. player.Name .. " aktivierte Pattern: " .. searchTerm)
+                end
+                
+            elseif cmd == "/patterns" or cmd == "/patternlist" then
+                local FloorPatterns = require(game.ReplicatedStorage.Assets.Modules.FloorPatterns100)
+                FloorPatterns:ListAllPatterns()
+                
+            elseif cmd:match("/category (.+)") then
+                local category = cmd:match("/category (.+)")
+                if guardian.patternSelector:ActivateRandomPattern(category) then
+                    print("🎲 " .. player.Name .. " aktivierte random " .. category .. " pattern!")
+                end
+                
+            elseif cmd == "/randompattern" then
+                guardian.patternSelector:ActivateRandomPattern()
+                print("🎲 " .. player.Name .. " aktivierte random pattern!")
+                
+            elseif cmd == "/patternhistory" then
+                guardian.patternSelector:ShowHistory()
+                
+            elseif cmd == "/stoppattern" then
+                guardian.patternSelector:ResetToSandColor()
+                print("🛑 " .. player.Name .. " stoppte aktives Pattern")
             end
         end)
     end)
